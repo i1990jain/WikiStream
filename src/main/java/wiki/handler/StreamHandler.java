@@ -14,7 +14,7 @@ import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 
 import wiki.data.Data;
-import wiki.subscriber.QuerySubscriber;
+import wiki.listener.QueryListener;
 
 /**
  * This class handles incoming Data. It processes them through the EPService, to
@@ -32,8 +32,8 @@ public class StreamHandler implements InitializingBean {
 	private EPStatement eventStatement;
 
 	@Autowired
-	@Qualifier("querySubscriber")
-	private QuerySubscriber querySubscriber;
+	@Qualifier("queryListener")
+	private QueryListener queryListener;
 
 	/**
 	 * Configure Esper Statement(s).
@@ -64,8 +64,10 @@ public class StreamHandler implements InitializingBean {
 
 	private void createExpression() {
 
-		eventStatement = epService.getEPAdministrator().createEPL(querySubscriber.getStatement());
-		eventStatement.setSubscriber(querySubscriber);
+		eventStatement = epService.getEPAdministrator().createEPL(
+				"select  character, count(*) as count from Character group by character having count(*)>0  order by count(*) desc limit 5");
+
+		eventStatement.addListener(queryListener);
 	}
 
 	/**
