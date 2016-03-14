@@ -14,7 +14,9 @@ import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 
 import wiki.data.Data;
+import wiki.listener.CountListener;
 import wiki.listener.QueryListener;
+import wiki.listener.TypeListener;
 
 /**
  * This class handles incoming Data. It processes them through the EPService, to
@@ -35,6 +37,14 @@ public class StreamHandler implements InitializingBean {
 	@Qualifier("queryListener")
 	private QueryListener queryListener;
 
+	@Autowired
+	@Qualifier("countListener")
+	private CountListener countListener;
+
+	@Autowired
+	@Qualifier("typeListener")
+	private TypeListener typeListener;
+
 	/**
 	 * Configure Esper Statement(s).
 	 */
@@ -48,6 +58,8 @@ public class StreamHandler implements InitializingBean {
 		createWindow();
 		insertIntoWindow();
 		createExpression();
+		countOfFeeds();
+		countOfTypeOfFeeds();
 
 	}
 
@@ -69,6 +81,22 @@ public class StreamHandler implements InitializingBean {
 				"select  character, count(*) as count from Character group by character having count(*)>0  order by count(*) desc limit 5");
 
 		eventStatement.addListener(queryListener);
+	}
+
+	private void countOfFeeds() {
+
+		eventStatement = epService.getEPAdministrator()
+				.createEPL("select  count(*) as count from Data.win:time_batch(300 sec)");
+
+		eventStatement.addListener(countListener);
+	}
+
+	private void countOfTypeOfFeeds() {
+
+		eventStatement = epService.getEPAdministrator()
+				.createEPL("select  type as type,count(*) as count from Data.win:time_batch(300 sec) group by type");
+
+		eventStatement.addListener(typeListener);
 	}
 
 	/**
