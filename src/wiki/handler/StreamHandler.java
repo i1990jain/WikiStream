@@ -100,7 +100,7 @@ public class StreamHandler implements InitializingBean {
 	}
 
 	/**
-	 * Handle the incoming TemperatureEvent.
+	 * Handle the incoming Data
 	 */
 	public void handle(Data data) {
 
