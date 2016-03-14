@@ -58,7 +58,8 @@ public class StreamHandler implements InitializingBean {
 
 	private void createWindow() {
 
-		epService.getEPAdministrator().createEPL("create window Character.win:time_batch(5 sec) as (character string)");
+		epService.getEPAdministrator()
+				.createEPL("create window Character.win:time_batch(300 sec) as (character string)");
 
 	}
 

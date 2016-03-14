@@ -1,5 +1,8 @@
 package wiki.listener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.stereotype.Component;
 
 import com.espertech.esper.client.EventBean;
@@ -12,6 +15,9 @@ public class QueryListener implements UpdateListener {
 		StringBuilder sb = new StringBuilder();
 		sb.append("(");
 		int count = 0;
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		System.out.println(dateFormat.format(date.getTime()));
 		for (EventBean event : newEvents) {
 			sb.append("(" + event.get("character") + ",");
 			sb.append(event.get("count") + ")");
