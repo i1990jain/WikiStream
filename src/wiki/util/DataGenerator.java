@@ -11,10 +11,6 @@ import org.springframework.stereotype.Component;
 import wiki.data.Data;
 import wiki.handler.StreamHandler;
 
-/**
- * Just a simple class to create a number of Random TemperatureEvents and pass
- * them off to the TemperatureEventHandler.
- */
 @Component
 public class DataGenerator {
 
